@@ -57,7 +57,7 @@ export default function Home() {
       <div className="max-w-11/12 mx-auto flex flex-col gap-10">
         <Header activeTab={activeTab} setActiveTab={setActiveTab} />
         <div className="grid grid-cols-1 md:grid-cols-7 gap-5">
-          <PhoneMockup />
+          <PhoneMockup links={links} />
           {activeTab === "links" && (
             <LinksForm
               links={links}

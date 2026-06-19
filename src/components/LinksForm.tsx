@@ -1,3 +1,17 @@
+import {
+  DndContext,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  arrayMove,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { Link2, Plus } from "lucide-react";
 import DevToIcon from "../assets/icons/DevToGrey.svg";
 import FbIcon from "../assets/icons/FacebookGrey.svg";
@@ -10,6 +24,8 @@ import PortfolioIcon from "../assets/icons/PortfolioGrey.svg";
 import StackOverflowIcon from "../assets/icons/StackOverflowGrey.svg";
 import TwitterIcon from "../assets/icons/TwitterGrey.svg";
 import YoutubeIcon from "../assets/icons/YoutubeGrey.svg";
+import NoLinkIllustraion from "../assets/images/NoLinkIllustration.svg";
+import type { LinkItem } from "../pages/Home";
 import { Button } from "./ui/button";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "./ui/input-group";
 import { Label } from "./ui/label";
@@ -21,8 +37,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import type { LinkItem } from "../pages/Home";
-import NoLinkIllustraion from "../assets/images/NoLinkIllustration.svg";
 
 export type PlatformOption = {
   label: string;
@@ -43,6 +57,27 @@ type LinksFormProps = {
 export default function LinksForm(props: LinksFormProps) {
   const { links, setLinks, ...rest } = props;
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    }),
+  );
+
+  const handleDragEnd = (event: any) => {
+    const { active, over } = event;
+
+    if (!over || active.id === over.id) return;
+
+    const oldIndex = links.findIndex((l) => l.id === active.id);
+    const newIndex = links.findIndex((l) => l.id === over.id);
+
+    const newLinks = arrayMove(links, oldIndex, newIndex);
+
+    setLinks(newLinks);
+  };
+
   return (
     <div className="bg-white rounded-xl py-7 px-10 md:col-span-4 flex flex-col gap-4">
       <LinksHeader
@@ -51,31 +86,42 @@ export default function LinksForm(props: LinksFormProps) {
       />
       {/* Links Container */}
       <div className="flex flex-col gap-3">
-        {links.length === 0 ? (
-          <NoLinkState />
-        ) : (
-          links.map((link, index) => {
-            const currentPlatform = link.platform;
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext
+            items={links.map((l) => l.id)}
+            strategy={verticalListSortingStrategy}
+          >
+            {links.length === 0 ? (
+              <NoLinkState />
+            ) : (
+              links.map((link, index) => {
+                const currentPlatform = link.platform;
 
-            const options: PlatformOption[] = platformOptions.filter(
-              (option) =>
-                option.value === currentPlatform ||
-                !links.some(
-                  (l) => l.platform === option.value && l.id !== link.id,
-                ),
-            );
+                const options: PlatformOption[] = platformOptions.filter(
+                  (option) =>
+                    option.value === currentPlatform ||
+                    !links.some(
+                      (l) => l.platform === option.value && l.id !== link.id,
+                    ),
+                );
 
-            return (
-              <LinkCard
-                key={link.id}
-                link={link}
-                index={index}
-                options={options}
-                {...rest}
-              />
-            );
-          })
-        )}
+                return (
+                  <LinkCard
+                    key={link.id}
+                    link={link}
+                    index={index}
+                    options={options}
+                    {...rest}
+                  />
+                );
+              })
+            )}
+          </SortableContext>
+        </DndContext>
       </div>
       {links.length > 0 && (
         <div className="flex justify-end">
@@ -104,10 +150,27 @@ const LinkCard = ({
   updateLink,
   updatePlatform,
 }: LinkCardProps) => {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: link.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
   return (
-    <div className="bg-gray-100 rounded-lg p-4 grid gap-3">
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      className="bg-gray-100 rounded-lg p-4 grid gap-3"
+    >
       <div className="flex items-center justify-between">
-        <p className="text-gray-500 font-semibold">Link # {index + 1}</p>
+        <div className="flex items-center gap-2">
+          <Link2 className="text-gray-400" />
+          <p className="text-gray-500 font-semibold">Link # {index + 1}</p>
+        </div>
         <Button variant={"secondary"} onClick={() => remove(link.id)}>
           Remove
         </Button>

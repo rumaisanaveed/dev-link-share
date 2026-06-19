@@ -18,7 +18,7 @@ export default function PublicProfile() {
             Share
           </Button>
         </div>
-        <PhoneMockup className="bg-transparent" />
+        <PhoneMockup links={[]} className="bg-transparent" />
       </div>
     </div>
   );
