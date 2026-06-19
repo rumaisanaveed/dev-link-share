@@ -92,9 +92,7 @@ export default function ProfileDetails() {
           <div className="space-y-6">
             {/* User Name */}
             <div className="grid md:grid-cols-[150px_1fr] items-center gap-6">
-              <Label className="text-gray-500 font-normal">
-                Username<span className="text-red-500">*</span>
-              </Label>
+              <Label className="text-gray-500 font-normal">Username</Label>
 
               <Input
                 value={form.username}
