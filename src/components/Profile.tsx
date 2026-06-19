@@ -2,8 +2,48 @@ import { ImageIcon } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
+import { useState } from "react";
+import { EMAIL_REGEX } from "../lib/utils";
 
 export default function ProfileDetails() {
+  const [form, setForm] = useState({
+    username: "",
+    email: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+
+    setForm((prev) => ({
+      ...prev,
+      [id]: value,
+    }));
+  };
+
+  const validate = () => {
+    let isValid = true;
+
+    if (!form.email) {
+      isValid = false;
+    } else if (!EMAIL_REGEX.test(form.email)) {
+      isValid = false;
+    }
+
+    if (!form.username) {
+      isValid = false;
+    }
+
+    return isValid;
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const isValid = validate();
+    if (!isValid) return;
+  };
+
+  const isFormValid = EMAIL_REGEX.test(form.email) && form.username;
+
   return (
     <div className="bg-white rounded-xl py-7 px-10 md:col-span-4 flex flex-col justify-between">
       <div className="flex flex-col gap-10">
@@ -56,7 +96,12 @@ export default function ProfileDetails() {
                 Username<span className="text-red-500">*</span>
               </Label>
 
-              <Input placeholder="e.g. John Doe" className="h-12 bg-white" />
+              <Input
+                value={form.username}
+                onChange={handleChange}
+                placeholder="e.g. John Doe"
+                className="h-12 bg-white"
+              />
             </div>
 
             {/* Email */}
@@ -66,6 +111,8 @@ export default function ProfileDetails() {
               <Input
                 placeholder="e.g. email@example.com"
                 className="h-12 bg-white"
+                value={form.email}
+                onChange={handleChange}
               />
             </div>
           </div>
@@ -74,7 +121,13 @@ export default function ProfileDetails() {
 
       {/* Footer */}
       <div className="mt-10 border-t pt-6 flex justify-end">
-        <Button size="lg" variant={"default"}>
+        <Button
+          type="submit"
+          disabled={!isFormValid}
+          size="lg"
+          variant={"default"}
+          onClick={handleSubmit}
+        >
           Save
         </Button>
       </div>
