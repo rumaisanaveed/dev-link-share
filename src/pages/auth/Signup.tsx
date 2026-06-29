@@ -12,7 +12,8 @@ import { Label } from "../../components/ui/label";
 import useSignup from "../../layouts/auth/SignupContainer";
 
 export default function Signup() {
-  const { form, isFormValid, handleChange, handleSubmit } = useSignup();
+  const { form, isFormValid, isSubmitting, handleChange, handleSubmit } =
+    useSignup();
 
   return (
     <div className="h-screen w-full flex items-center justify-center bg-gray-50">
@@ -72,7 +73,7 @@ export default function Signup() {
               </div>
               <div className="flex flex-col gap-5">
                 <Button
-                  disabled={!isFormValid}
+                  disabled={!isFormValid || isSubmitting}
                   variant="default"
                   className="h-12"
                   type="submit"

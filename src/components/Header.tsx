@@ -1,8 +1,10 @@
-import { Eye, Link2 } from "lucide-react";
+import { Eye, Link2, LogOut } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import { TabItems } from "../layouts/home/constants";
 import { Button } from "./ui/button";
+import { logout } from "../services/auth";
+import { toast } from "sonner";
 
 type HeaderProps = {
   activeTab: string;
@@ -11,6 +13,17 @@ type HeaderProps = {
 
 export default function Header({ activeTab, setActiveTab }: HeaderProps) {
   const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+
+      toast.success("Logged out successfully.");
+      navigate("/login");
+    } catch {
+      toast.error("Unable to logout.");
+    }
+  };
 
   return (
     <div className="bg-white rounded-xl p-4 flex items-center justify-between">
@@ -32,16 +45,25 @@ export default function Header({ activeTab, setActiveTab }: HeaderProps) {
         </TabsList>
       </Tabs>
 
-      <Button
-        variant={"outline"}
-        size={"lg"}
-        onClick={() => navigate("/public-profile")}
-      >
-        <span className="hidden md:block">Preview</span>
-        <span className="md:hidden">
-          <Eye />
-        </span>
-      </Button>
+      <div className="flex items-center gap-2">
+        <Button
+          variant={"outline"}
+          size={"lg"}
+          onClick={() => navigate("/public-profile")}
+        >
+          <span className="hidden md:block">Preview</span>
+          <span className="md:hidden">
+            <Eye />
+          </span>
+        </Button>
+
+        <Button variant="destructive" size={"lg"} onClick={handleLogout}>
+          <span className="hidden md:block">Logout</span>
+          <span className="md:hidden">
+            <LogOut />
+          </span>
+        </Button>
+      </div>
     </div>
   );
 }

@@ -1,7 +1,17 @@
 import { useState } from "react";
 import { EMAIL_REGEX } from "../../lib/utils";
+import { signup } from "../../services/auth";
+import { createUserProfile } from "../../services/users";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
+import { FirebaseError } from "firebase/app";
+import { getFirebaseErrorMessage } from "../../lib/firebase-errors";
 
 export default function useSignup() {
+  const navigate = useNavigate();
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -56,12 +66,33 @@ export default function useSignup() {
     return isValid;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const isValid = validate();
 
     if (!isValid) return;
+
+    setIsSubmitting(true);
+
+    try {
+      const user = await signup(form.email, form.password);
+
+      await createUserProfile(user.uid, user.email ?? "");
+
+      toast.success("Signup successful.");
+      navigate("/");
+    } catch (error) {
+      if (error instanceof FirebaseError) {
+        toast.error(getFirebaseErrorMessage(error.code));
+        console.error(error.code, error.message);
+      } else {
+        toast.error("An unexpected error occurred.");
+        console.error(error);
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const isFormValid =
@@ -75,5 +106,6 @@ export default function useSignup() {
     handleChange,
     handleSubmit,
     isFormValid,
+    isSubmitting,
   };
 }

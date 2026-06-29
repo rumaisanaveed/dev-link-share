@@ -61,7 +61,7 @@ export default function Login() {
                   className="h-12"
                   type="submit"
                 >
-                  Create new account
+                  Log in
                 </Button>
                 <p className="text-gray-600 font-normal text-center">
                   Don't have an account?{" "}
