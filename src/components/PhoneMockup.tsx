@@ -7,9 +7,14 @@ import { platformOptions } from "./LinksForm";
 export default function PhoneMockup({
   className,
   links,
+  user,
 }: {
   className?: string;
   links: LinkItem[];
+  user?: {
+    displayName?: string;
+    photoURL?: string;
+  };
 }) {
   const copyLink = async (e: React.MouseEvent, url: string) => {
     e.stopPropagation();
@@ -56,9 +61,25 @@ export default function PhoneMockup({
 
           {/* Profile Section */}
           <div className="flex flex-col items-center px-4 pt-2">
-            <div className="w-20 h-20 rounded-full bg-gray-200" />
-            <h2 className="mt-3 font-semibold text-lg">Your Name</h2>
-            <p className="text-sm text-gray-500">@username</p>
+            <div className="w-20 h-20 rounded-full bg-gray-200 overflow-hidden">
+              {user?.photoURL ? (
+                <img
+                  src={user.photoURL}
+                  alt="Profile"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-gray-600 font-bold">
+                  {user?.displayName?.charAt(0)?.toUpperCase() || "U"}
+                </div>
+              )}
+            </div>
+            <h2 className="mt-3 font-semibold text-lg">
+              {user?.displayName || "Anonymous"}
+            </h2>
+            <p className="text-sm text-gray-500">
+              {user?.displayName ? `@${user.displayName}` : "@username"}
+            </p>
           </div>
 
           {/* Links */}

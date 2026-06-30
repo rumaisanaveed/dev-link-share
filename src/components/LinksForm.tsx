@@ -52,10 +52,12 @@ type LinksFormProps = {
   remove: (id: string) => void;
   updatePlatform: (id: string, url: string) => void;
   updateLink: (id: string, url: string) => void;
+  onSave: () => void;
+  isSaving: boolean;
 };
 
 export default function LinksForm(props: LinksFormProps) {
-  const { links, setLinks, ...rest } = props;
+  const { links, setLinks, onSave, isSaving, ...rest } = props;
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -125,7 +127,12 @@ export default function LinksForm(props: LinksFormProps) {
       </div>
       {links.length > 0 && (
         <div className="flex justify-end">
-          <Button variant={"default"} size={"lg"}>
+          <Button
+            variant={"default"}
+            size={"lg"}
+            onClick={onSave}
+            disabled={isSaving}
+          >
             Save
           </Button>
         </div>
@@ -136,7 +143,7 @@ export default function LinksForm(props: LinksFormProps) {
 
 type LinkCardProps = Omit<
   LinksFormProps,
-  "links" | "setLinks" | "availablePlatforms"
+  "links" | "setLinks" | "availablePlatforms" | "onSave" | "isSaving"
 > & {
   link: LinkItem;
   index: number;

@@ -30,6 +30,19 @@ export default function Signup() {
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-6 w-full">
               <div className="grid gap-2">
+                <Label htmlFor="username" className="text-gray-600 font-normal">
+                  Username
+                </Label>
+                <Input
+                  id="username"
+                  type="username"
+                  placeholder="John Doe"
+                  className="h-10"
+                  value={form.username}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="grid gap-2">
                 <Label htmlFor="email" className="text-gray-600 font-normal">
                   Email
                 </Label>

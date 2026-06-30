@@ -1,11 +1,13 @@
+import { FirebaseError } from "firebase/app";
+import { updateProfile } from "firebase/auth";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { db } from "../../firebase/config";
+import { getFirebaseErrorMessage } from "../../lib/firebase-errors";
 import { EMAIL_REGEX } from "../../lib/utils";
 import { signup } from "../../services/auth";
-import { createUserProfile } from "../../services/users";
-import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
-import { FirebaseError } from "firebase/app";
-import { getFirebaseErrorMessage } from "../../lib/firebase-errors";
 
 export default function useSignup() {
   const navigate = useNavigate();
@@ -13,6 +15,7 @@ export default function useSignup() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [form, setForm] = useState({
+    username: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -29,12 +32,18 @@ export default function useSignup() {
 
   const validate = () => {
     let newErrors = {
+      username: "",
       email: "",
       password: "",
       confirmPassword: "",
     };
 
     let isValid = true;
+
+    if (!form.username) {
+      newErrors.username = "Username is required";
+      isValid = false;
+    }
 
     if (!form.email) {
       newErrors.email = "Email is required";
@@ -78,7 +87,16 @@ export default function useSignup() {
     try {
       const user = await signup(form.email, form.password);
 
-      await createUserProfile(user.uid, user.email ?? "");
+      await updateProfile(user, {
+        displayName: form.username,
+      });
+
+      await setDoc(doc(db, "users", user.uid), {
+        username: form.username,
+        email: form.email,
+        photoURL: user.photoURL ?? null,
+        createdAt: serverTimestamp(),
+      });
 
       toast.success("Signup successful.");
       navigate("/");
