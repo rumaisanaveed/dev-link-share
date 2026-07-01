@@ -1,73 +1,87 @@
-# React + TypeScript + Vite
+# DevLinkShare
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Project Overview
 
-Currently, two official plugins are available:
+DevLinkShare is a web application that allows developers to create and share a personalized profile containing all of their important social and professional links in one place. Users can customize their profile, manage links through an intuitive interface, preview their public profile in real time, and share a single public URL with others.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## Problem Statement
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+I often saved my important links in my WhatsApp chat so I could access them later. However, finding a specific link among many messages became time-consuming and inconvenient. I wanted a better way to organize, access, copy, and share my frequently used links.
 
-## Expanding the ESLint configuration
+This inspired me to build DevLinkShare, an application that allows users to manage all their important links in one place. Users can easily copy individual links, organize them, and share a single public profile instead of sending multiple links separately.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Objectives
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+* Provide a single public profile for sharing multiple links.
+* Allow users to manage their links through a simple interface.
+* Enable profile customization with a username and profile picture.
+* Offer a live preview of the public profile before sharing.
+* Make sharing quick and convenient through a public profile URL.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Key Features
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+* User authentication (Sign Up, Login, Logout)
+* Profile management (username and profile picture)
+* Add, edit, and remove links
+* Drag-and-drop link reordering
+* Live phone preview while editing
+* Public profile page accessible via username
+* Copy individual links directly from the preview
+* Share public profile using the browser's native share API (with clipboard fallback)
+* Responsive interface for desktop and mobile devices
+* Toast notifications for user actions
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
+
+## Tech Stack
+
+### Frontend
+
+* React
+* TypeScript
+* React Router
+* Tailwind CSS
+* shadcn/ui
+* dnd-kit
+* Lucide React
+
+### Backend & Services
+
+* Firebase Authentication
+* Cloud Firestore
+* Cloudinary (Profile Image Upload)
+
+---
+
+## Usage
+
+1. Create an account or log in.
+2. Complete your profile by adding a username and profile picture.
+3. Add your social or professional links.
+4. Reorder links using drag and drop.
+5. Preview your public profile.
+6. Share your public profile URL with others.
+
+---
+
+## App ScreenShots
+
+<img width="1918" height="1095" alt="image" src="https://github.com/user-attachments/assets/5bfdaded-0cf9-4527-ace2-9ecbf4f324b6" />
+
+<img width="1919" height="1095" alt="image" src="https://github.com/user-attachments/assets/1f7d340b-e3e9-4d03-94b3-5b2eb9cd30fa" />
+
+<img width="1919" height="1092" alt="image" src="https://github.com/user-attachments/assets/118fe115-7627-4d9a-9fc1-3c4bfaca0123" />
+
+<img width="1919" height="1095" alt="image" src="https://github.com/user-attachments/assets/edaf608b-f5ac-409c-a99d-e156593548b9" />
+
+---
+
+## License
+
+This project is licensed under the MIT License.
