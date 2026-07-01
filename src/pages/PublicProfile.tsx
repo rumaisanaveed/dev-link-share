@@ -6,6 +6,7 @@ import { getPublicLinks, getUserByUsername } from "../services/publicProfile";
 import type { LinkItem } from "./Home";
 import { Spinner } from "../components/ui/spinner";
 import { useAuth } from "../context/AuthContext";
+import { toast } from "sonner";
 
 export default function PublicProfile() {
   const navigate = useNavigate();
@@ -35,6 +36,25 @@ export default function PublicProfile() {
     loadProfile();
   }, [username]);
 
+  const handleShare = async () => {
+    const url = window.location.href;
+
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: "Check out my DevLinkShare profile",
+          text: "Here are all my links!",
+          url,
+        });
+      } else {
+        await navigator.clipboard.writeText(url);
+        toast.success("Profile link copied to clipboard!");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="w-full bg-primary rounded-bl-4xl rounded-br-4xl h-96 p-10">
@@ -44,7 +64,7 @@ export default function PublicProfile() {
             Back to Editor
           </Button>
 
-          <Button variant={"default"} size={"lg"}>
+          <Button variant={"default"} size={"lg"} onClick={handleShare}>
             Share
           </Button>
         </div>
