@@ -134,7 +134,7 @@ export default function ProfileDetails() {
 
         {/* Upload Section */}
         <div className="rounded-xl bg-slate-50 p-5">
-          <div className="grid lg:grid-cols-3 text-center lg:text-left place-items-center lg:place-items-baseline gap-6">
+          <div className="grid lg:grid-cols-3 text-center lg:text-left place-items-center gap-6">
             <p className="text-gray-500">Profile picture</p>
 
             <>
@@ -174,7 +174,7 @@ export default function ProfileDetails() {
               </button>
             </>
 
-            <p className="text-sm text-gray-500 leading-6">
+            <p className="text-sm text-gray-500 leading-6 hidden xl:block">
               Image must be below 1024×1024px.
               <br />
               Use PNG, JPG or WebP.

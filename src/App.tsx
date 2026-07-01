@@ -20,7 +20,7 @@ function App() {
       />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
-      <Route path="/public-profile" element={<PublicProfile />} />
+      <Route path="/:username" element={<PublicProfile />} />
     </Routes>
   );
 }

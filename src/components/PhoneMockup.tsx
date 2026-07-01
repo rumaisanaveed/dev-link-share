@@ -28,20 +28,30 @@ export default function PhoneMockup({
     }
   };
 
-  const previewLinks = links
-    .map((link) => {
-      const meta = platformOptions.find((p) => p.value === link.platform);
+  const previewLinks = links.flatMap((link) => {
+    const meta = platformOptions.find((p) => p.value === link.platform);
 
-      if (!meta) return null;
+    if (!meta) return [];
 
-      return {
+    return [
+      {
         name: meta.label,
         icon: getPlatformIcon(meta.value),
         url: link.url,
         bgColor: getPlatformColor(meta.value),
-      };
-    })
-    .filter(Boolean);
+      },
+    ];
+  });
+
+  const displayedLinks = [
+    ...previewLinks,
+    ...Array.from({
+      length: Math.max(0, 6 - previewLinks.length),
+    }).map((_, index) => ({
+      id: `placeholder-${index}`,
+      isPlaceholder: true,
+    })),
+  ];
 
   return (
     <div
@@ -84,38 +94,53 @@ export default function PhoneMockup({
 
           {/* Links */}
           <div className="flex-1 px-5 mt-5 space-y-3 overflow-y-auto hide-scrollbar">
-            {/* GitHub */}
-            {previewLinks.map((link) => (
-              <div
-                onClick={() => window.open(link?.url, "_blank")}
-                key={link?.name}
-                className="w-full h-12 rounded-xl flex items-center justify-between px-4"
-                style={{
-                  backgroundColor: link?.bgColor,
-                }}
-              >
-                <div className="flex items-center gap-3">
-                  <img height={20} width={20} src={link?.icon} />
-                  <span className="text-white text-sm font-medium">
-                    {link?.name}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={(e) => copyLink(e, link?.url ?? "")}
-                    className="text-white/80 hover:text-white"
-                    type="button"
-                  >
-                    <Copy size={15} />
-                  </button>
+            {displayedLinks.map((link) => {
+              if ("isPlaceholder" in link) {
+                return (
+                  <div
+                    key={link.id}
+                    className="w-full h-12 rounded-xl bg-gray-200 animate-pulse flex items-center justify-between px-4"
+                  ></div>
+                );
+              }
 
-                  <ArrowRight size={15} color="#fff" />
+              return (
+                <div
+                  key={link.name}
+                  onClick={() => window.open(link.url, "_blank")}
+                  className="w-full h-12 rounded-xl flex items-center justify-between px-4 cursor-pointer"
+                  style={{
+                    backgroundColor: link.bgColor,
+                  }}
+                >
+                  <div className="flex items-center gap-3">
+                    <img
+                      height={20}
+                      width={20}
+                      src={link.icon}
+                      alt={link.name}
+                    />
+
+                    <span className="text-white text-sm font-medium">
+                      {link.name}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={(e) => copyLink(e, link.url)}
+                      className="text-white/80 hover:text-white"
+                      type="button"
+                    >
+                      <Copy size={15} />
+                    </button>
+
+                    <ArrowRight size={15} color="#fff" />
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
-
-          {/* Bottom safe space */}
           <div className="h-6" />
         </div>
       </div>

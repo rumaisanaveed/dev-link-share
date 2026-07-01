@@ -5,6 +5,7 @@ import { TabItems } from "../layouts/home/constants";
 import { Button } from "./ui/button";
 import { logout } from "../services/auth";
 import { toast } from "sonner";
+import { useAuth } from "../context/AuthContext";
 
 type HeaderProps = {
   activeTab: string;
@@ -13,6 +14,8 @@ type HeaderProps = {
 
 export default function Header({ activeTab, setActiveTab }: HeaderProps) {
   const navigate = useNavigate();
+
+  const { user } = useAuth();
 
   const handleLogout = async () => {
     try {
@@ -49,7 +52,8 @@ export default function Header({ activeTab, setActiveTab }: HeaderProps) {
         <Button
           variant={"outline"}
           size={"lg"}
-          onClick={() => navigate("/public-profile")}
+          disabled={!user?.displayName}
+          onClick={() => navigate(`/${user!.displayName}`)}
         >
           <span className="hidden md:block">Preview</span>
           <span className="md:hidden">

@@ -125,18 +125,16 @@ export default function LinksForm(props: LinksFormProps) {
           </SortableContext>
         </DndContext>
       </div>
-      {links.length > 0 && (
-        <div className="flex justify-end">
-          <Button
-            variant={"default"}
-            size={"lg"}
-            onClick={onSave}
-            disabled={isSaving}
-          >
-            Save
-          </Button>
-        </div>
-      )}
+      <div className="flex justify-end">
+        <Button
+          variant={"default"}
+          size={"lg"}
+          onClick={onSave}
+          disabled={isSaving}
+        >
+          Save
+        </Button>
+      </div>
     </div>
   );
 }
